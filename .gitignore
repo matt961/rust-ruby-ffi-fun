@@ -1,0 +1,3 @@
+extern-test-rs/target
+**/*.rs.bk
+.yardoc/**
