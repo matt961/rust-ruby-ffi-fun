@@ -10,16 +10,14 @@ module ExternTest
   ffi_lib 'extern-test-rs/target/release/libextern_test.so'
 
   attach_function :hello, [], :pointer
-  attach_function :drop_isize, [:pointer], :void
+  attach_function :drop_str, [:pointer], :void
 end
 
-ptr = FFI::Pointer.new ExternTest.hello #=> FFI::Pointer
-puts ptr
-puts ptr.read :long
-ptr.write :long, 202
-puts ptr.read :long
-ExternTest.drop_isize ptr
-
-puts ptr.read :long
-
-ptr.write :long, 55
+auto_p = FFI::AutoPointer.new(
+  FFI::Pointer.new(ExternTest.hello),
+  ExternTest.method(:drop_str)
+)
+binding.pry
+puts auto_p
+s = auto_p.read_string
+puts s
